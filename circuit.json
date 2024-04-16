@@ -1,0 +1,32 @@
+{
+  "power_supply": { "voltage": 220.0 },
+  "circuit": [
+    { "Component": { "resistance": 10.0, "tension_in_circuit": 0.0 } },
+    { "Component": { "resistance": 20.0, "tension_in_circuit": 0.0 } },
+    {
+      "Parallel": [
+        [
+          { "Component": { "resistance": 30.0, "tension_in_circuit": 0.0 } },
+          { "Component": { "resistance": 40.0, "tension_in_circuit": 0.0 } }
+        ],
+        [
+          { "Component": { "resistance": 50.0, "tension_in_circuit": 0.0 } },
+          {
+            "Parallel": [
+              [
+                {
+                  "Component": { "resistance": 60.0, "tension_in_circuit": 0.0 }
+                }
+              ],
+              [
+                {
+                  "Component": { "resistance": 70.0, "tension_in_circuit": 0.0 }
+                }
+              ]
+            ]
+          }
+        ]
+      ]
+    }
+  ]
+}
