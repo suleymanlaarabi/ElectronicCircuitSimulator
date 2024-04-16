@@ -19,23 +19,7 @@ fn main() {
 
     let power_supply = PowerSupply::new(220.0);
 
-    let series: Series = vec![
-        SeriesElement::new(Resistor::new(10.0)),
-        SeriesElement::new(Resistor::new(20.0)),
-        SeriesElement::new_parallel(vec![
-            vec![
-                SeriesElement::new(Resistor::new(30.0)),
-                SeriesElement::new(Resistor::new(40.0)),
-            ],
-            vec![
-                SeriesElement::new(Resistor::new(50.0)),
-                SeriesElement::new_parallel(vec![
-                    vec![SeriesElement::new(Resistor::new(60.0))],
-                    vec![SeriesElement::new(Resistor::new(70.0))],
-                ]),
-            ],
-        ]),
-    ];
+    let series: Series = vec![];
 
     let mut circuit = Circuit::new(power_supply, series);
 

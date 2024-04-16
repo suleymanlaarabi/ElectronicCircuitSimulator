@@ -140,7 +140,6 @@ fn set_tensions_in_circuit(elements: &mut [SeriesElement], voltage: f64, total_r
         match element {
             SeriesElement::Component(component) => {
                 let drop = (component.get_resistance() / total_resistance) * voltage;
-                println!("Setting tension: {}", drop);
                 component.set_tension(drop);
             }
             SeriesElement::Parallel(parallel_series) => {
@@ -224,19 +223,17 @@ impl Display for SeriesElement {
 
 fn display_series(series: &[SeriesElement], f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     for (i, element) in series.iter().enumerate() {
-        write!(f, "Element {}: {}\n", i + 1, element)?;
+        write!(f, "{}", element)?;
+        if i < series.len() - 1 {
+            write!(f, "\n")?;
+        }
     }
     Ok(())
 }
 
 impl Display for Circuit {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Circuit:\n")?;
-        write!(f, "Power Supply: {}\n", self.power_supply)?;
-        write!(f, "Series Elements:\n")?;
-        for (i, element) in self.circuit.iter().enumerate() {
-            write!(f, "Element {}: {}\n", i + 1, element)?;
-        }
-        Ok(())
+        write!(f, "{}\n", self.power_supply)?;
+        display_series(&self.circuit, f)
     }
 }
