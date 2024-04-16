@@ -17,8 +17,8 @@ Ce projet utilise [Serde](https://serde.rs/) pour la sérialisation/désérialis
 Clonez ce dépôt en utilisant Git :
 
 ```bash
-git clone https://yourgithubrepo.com/yourusername/circuit-simulator-rust.git
-cd circuit-simulator-rust
+git clone https://github.com/suleymanlaarabi/ElectronicCircuitSimulator.git
+cd ElectronicCircuitSimulator
 ```
 
 Construisez le projet avec Cargo :
