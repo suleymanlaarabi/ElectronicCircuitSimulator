@@ -70,6 +70,16 @@ impl Clone for SeriesElement {
     }
 }
 
+impl SeriesElement {
+    pub fn new<T: 'static + ElectronicComponentTrait>(component: T) -> Self {
+        SeriesElement::Component(Box::new(component))
+    }
+
+    pub fn new_parallel(parallel: Vec<Series>) -> Self {
+        SeriesElement::Parallel(parallel)
+    }
+}
+
 pub type Series = Vec<SeriesElement>;
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -164,6 +174,10 @@ impl Circuit {
             self.power_supply.voltage,
             total_resistance,
         );
+    }
+
+    pub fn to_json(&self) -> String {
+        serde_json::to_string(&self).unwrap()
     }
 }
 
