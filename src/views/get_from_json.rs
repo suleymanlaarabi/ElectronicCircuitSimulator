@@ -39,17 +39,23 @@ pub fn get_from_json_view(circuit: &mut Circuit, term: &Term) {
     let path = Path::new(&json_file_path);
     let display = path.display();
 
-    let mut file = match File::open(&path) {
-        Err(why) => panic!("couldn't open {}: {}", display, why),
-        Ok(file) => file,
-    };
+    let file = File::open(&path);
 
     let mut json_string = String::new();
-    match file.read_to_string(&mut json_string) {
-        Err(why) => panic!("couldn't read {}: {}", display, why),
-        Ok(_) => {
-            let circuit_from_json: Circuit = serde_json::from_str(&json_string).unwrap();
-            *circuit = circuit_from_json;
+
+    if file.is_err() {
+        println!("Couldn't open {} reason: {:?}", display, file.err());
+        std::thread::sleep(std::time::Duration::from_secs(4));
+        return;
+    } else {
+        let mut file = file.unwrap();
+
+        match file.read_to_string(&mut json_string) {
+            Err(why) => panic!("couldn't read {}: {}", display, why),
+            Ok(_) => {
+                let circuit_from_json: Circuit = serde_json::from_str(&json_string).unwrap();
+                *circuit = circuit_from_json;
+            }
         }
     }
 

@@ -1,16 +1,10 @@
 mod circuit;
-use std::fs;
 
-use circuit::{Circuit, PowerSupply, Resistor, Series, SeriesElement};
+use circuit::{Circuit, PowerSupply, Series};
 
 use dialoguer::{console::Term, theme::ColorfulTheme};
 
 mod views;
-
-fn render_circuit(circuit: &mut Circuit) {
-    circuit.update_tensions();
-    println!("{}", circuit);
-}
 
 fn main() {
     let term = Term::stdout();
