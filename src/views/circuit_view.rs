@@ -1,6 +1,5 @@
 use crate::circuit::Circuit;
 use console::{style, Term};
-use dialoguer::theme::ColorfulTheme;
 
 use crossterm::{
     cursor::MoveTo,

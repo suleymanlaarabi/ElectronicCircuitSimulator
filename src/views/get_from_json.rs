@@ -5,11 +5,11 @@ use crossterm::{
     ExecutableCommand,
 };
 
-use dialoguer::{theme::ColorfulTheme, Input};
+use dialoguer::Input;
 use std::io::stdout;
 
 use crate::circuit::Circuit;
-use crate::views::{circuit_view, pages_enum::Pages};
+use crate::views::circuit_view;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
