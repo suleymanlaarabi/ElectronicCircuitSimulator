@@ -22,7 +22,7 @@ pub type Series = Vec<SeriesElement>;
 #[derive(Serialize, Deserialize)]
 pub struct Circuit {
     power_supply: PowerSupply,
-    circuit: Vec<SeriesElement>,
+    circuit: Series,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -154,7 +154,7 @@ fn set_tensions_in_circuit(elements: &mut [SeriesElement], voltage: f64) {
 }
 
 impl Circuit {
-    pub fn new(power_supply: PowerSupply, circuit: Vec<SeriesElement>) -> Self {
+    pub fn new(power_supply: PowerSupply, circuit: Series) -> Self {
         let new_circuit = Circuit {
             power_supply,
             circuit,

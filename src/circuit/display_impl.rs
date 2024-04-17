@@ -42,47 +42,45 @@ impl Display for ElectronicComponent {
     }
 }
 
-fn display_series_element(element: &SeriesElement) -> String {
-    match element {
-        SeriesElement::Component(component) => format!("{}", component),
-        SeriesElement::Parallel(series) => {
-            let mut series_str = String::new();
-            for (i, element) in series.iter().enumerate() {
-                series_str.push_str(&format!(
-                    "Parallel {}: {}\n",
-                    i + 1,
-                    display_series(&element)
-                ));
+impl Display for SeriesElement {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SeriesElement::Component(component) => write!(f, "{}", component),
+            SeriesElement::Parallel(series) => {
+                // print the first element of the parallel series next ....
+                let first_element = series.first().unwrap().first().unwrap();
+                write!(f, "Parallel : ({} ...)", first_element)?;
+                Ok(())
             }
-            series_str
         }
     }
 }
 
-fn display_series(series: &Series) -> String {
-    let mut series_str = String::new();
-    for (i, element) in series.iter().enumerate() {
-        series_str.push_str(&format!(
-            "Element {}: {}\n",
-            i + 1,
-            display_series_element(element)
-        ));
+fn display_series(series: &Series, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    for element in series {
+        write!(f, "{}", element)?;
     }
-    series_str
-}
-
-pub fn display_circuit(circuit: &Circuit) -> String {
-    let mut circuit_str = String::new();
-    circuit_str.push_str(&format!("Power Supply: {}\n", circuit.get_power_supply()));
-    circuit_str.push_str(&format!(
-        "Series:\n{}",
-        display_series(&circuit.get_series())
-    ));
-    circuit_str
+    Ok(())
 }
 
 impl Display for Circuit {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", display_circuit(self))
+        // print circuit voltage
+        let voltage = self.get_power_supply().get_voltage();
+        let voltage_rounded = (voltage * 100.0).round() / 100.0;
+        writeln!(f, "Power Supply (Voltage: {}V)", voltage_rounded)?;
+
+        // print circuit components
+        for series in self.get_series() {
+            match series {
+                SeriesElement::Component(component) => writeln!(f, "{}", component)?,
+                SeriesElement::Parallel(series) => {
+                    display_series(series.first().unwrap(), f)?;
+                    writeln!(f, "")?;
+                }
+            }
+        }
+
+        Ok(())
     }
 }

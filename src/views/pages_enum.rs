@@ -13,7 +13,7 @@ impl Display for Pages {
         match self {
             Pages::PrintCircuit => write!(f, "Print Circuit"),
             Pages::GetFromJson => write!(f, "Get From JSON"),
-            Pages::EditComponent => write!(f, "Edit Component"),
+            Pages::EditComponent => write!(f, "Edit And Show Component"),
             Pages::SaveAsJson => write!(f, "Save As JSON"),
             Pages::Exit => write!(f, "Exit"),
         }

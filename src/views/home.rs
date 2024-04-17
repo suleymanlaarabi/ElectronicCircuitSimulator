@@ -1,8 +1,8 @@
 use crate::{
     circuit::Circuit,
     views::{
-        circuit_view, get_from_json::get_from_json_view, pages_enum::Pages,
-        save_as_json::save_as_json_view,
+        circuit_view, edit_component::edit_component_view, get_from_json::get_from_json_view,
+        pages_enum::Pages, save_as_json::save_as_json_view,
     },
 };
 
@@ -67,6 +67,7 @@ pub fn home(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) -> bool {
         }
         Some(2) => {
             println!("Edit Component");
+            edit_component_view(circuit, theme);
             return false;
         }
         Some(3) => {
