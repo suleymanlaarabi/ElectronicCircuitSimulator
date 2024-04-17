@@ -76,53 +76,13 @@ Voici un exemple de fichier de circuit en JSON :
         [
           {
             "Component": {
-              "Resistor": { "resistance": 20.0, "tension_in_circuit": 0.0 }
+              "Resistor": { "resistance": 320.0, "tension_in_circuit": 0.0 }
             }
           },
           {
             "Component": {
               "Resistor": { "resistance": 20.0, "tension_in_circuit": 0.0 }
             }
-          },
-          {
-            "Parallel": [
-              [
-                {
-                  "Component": {
-                    "Resistor": {
-                      "resistance": 20.0,
-                      "tension_in_circuit": 0.0
-                    }
-                  }
-                },
-                {
-                  "Component": {
-                    "Resistor": {
-                      "resistance": 20.0,
-                      "tension_in_circuit": 0.0
-                    }
-                  }
-                }
-              ],
-              [
-                {
-                  "Component": {
-                    "Resistor": {
-                      "resistance": 20.0,
-                      "tension_in_circuit": 0.0
-                    }
-                  }
-                },
-                {
-                  "Component": {
-                    "Resistor": {
-                      "resistance": 20.0,
-                      "tension_in_circuit": 0.0
-                    }
-                  }
-                }
-              ]
-            ]
           }
         ]
       ]
