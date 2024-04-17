@@ -1,5 +1,6 @@
 use crate::{
     circuit::Circuit,
+    utils::print_header,
     views::{
         circuit_view, edit_component::edit_component_view, get_from_json::get_from_json_view,
         pages_enum::Pages, save_as_json::save_as_json_view,
@@ -38,34 +39,16 @@ pub fn home(
         .execute(MoveTo(0, 0))
         .expect("Unable to replace console cursor");
 
-    let app_title: console::StyledObject<&str> =
-        style("Electronic Circuit Simulator").underlined().cyan();
-
-    println!("\n{}", app_title);
-
     let mut title = String::from("Home");
-    match message {
-        Some(msg) => {
-            let message_styled = style(msg).bold().blue();
-            print!("\n{}\n", message_styled);
-        }
-        None => {}
-    }
 
     if !circuit.get_series().is_empty() {
-        title.push_str(" - CircuitInfo: (Intensity: ");
+        title.push_str(format!(" - CircuitInfo (Intensity").as_str());
         title.push_str(
-            ((&circuit.get_intensity() * 1000.0).round() / 1000.0)
-                .to_string()
-                .as_str(),
+            format!(": {} A)", (circuit.get_intensity() / 100.0).round() * 100.0).as_str(),
         );
-        title.push_str(" A)");
     }
 
-    let title_styled: console::StyledObject<&str> =
-        style(title.as_str()).bold().underlined().green();
-
-    println!("\n{}\n", title_styled);
+    print_header(&title, &message.unwrap_or_else(|| String::from("")));
 
     let menu: Vec<Pages> = vec![
         Pages::PrintCircuit,

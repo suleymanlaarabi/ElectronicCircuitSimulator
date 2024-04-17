@@ -20,10 +20,8 @@ pub fn print_circuit_view(circuit: &mut Circuit, term: &Term) -> HomeReturn {
         .execute(MoveTo(0, 0))
         .expect("Unable to replace console cursor");
 
-    let app_title: console::StyledObject<&str> = style("Electronic Circuit Simulator")
-        .bold()
-        .underlined()
-        .green();
+    let app_title: console::StyledObject<&str> =
+        style("Electronic Circuit Simulator").underlined().cyan();
     println!("\n{}", app_title);
 
     let title = String::from("Print Circuit");

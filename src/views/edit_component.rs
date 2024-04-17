@@ -27,7 +27,7 @@ fn clear_terminal() {
 
 fn edit_component(component: &mut ElectronicComponent) -> HomeReturn {
     let resistance = dialoguer::Input::<f64>::new()
-        .with_prompt("Enter the resistance")
+        .with_prompt("Enter the resistance Ω")
         .interact()
         .unwrap();
 

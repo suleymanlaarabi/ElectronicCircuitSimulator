@@ -16,11 +16,6 @@ Ce projet utilise [Serde](https://serde.rs/) pour la sérialisation/désérialis
 
 Clonez ce dépôt en utilisant Git :
 
-```bash
-git clone https://github.com/suleymanlaarabi/ElectronicCircuitSimulator.git
-cd ElectronicCircuitSimulator
-```
-
 Construisez le projet avec Cargo :
 
 ```bash

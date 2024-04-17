@@ -3,6 +3,7 @@ use circuit::{Circuit, PowerSupply, Series};
 use dialoguer::{console::Term, theme::ColorfulTheme};
 
 mod circuit;
+mod utils;
 mod views;
 
 fn main() {
