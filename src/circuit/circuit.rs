@@ -22,6 +22,7 @@ pub type Series = Vec<SeriesElement>;
 #[derive(Serialize, Deserialize)]
 pub struct Circuit {
     power_supply: PowerSupply,
+    intensity: f64,
     circuit: Series,
 }
 
@@ -159,12 +160,21 @@ fn set_tensions_in_circuit(elements: &mut [SeriesElement], voltage: f64) {
     });
 }
 
+pub fn calculate_current(circuit: &Circuit) -> f64 {
+    let total_resistance = calculate_total_resistance(&circuit.circuit);
+    circuit.power_supply.get_voltage() / total_resistance
+}
+
 impl Circuit {
     pub fn new(power_supply: PowerSupply, circuit: Series) -> Self {
-        let new_circuit = Circuit {
+        let mut new_circuit = Circuit {
             power_supply,
             circuit,
+            intensity: 0.0,
         };
+
+        new_circuit.update_tensions();
+        new_circuit.update_intensity();
 
         new_circuit
     }
@@ -173,16 +183,30 @@ impl Circuit {
         serde_json::to_string(&self).unwrap()
     }
 
+    pub fn update_intensity(&mut self) -> f64 {
+        self.intensity = calculate_current(self);
+        self.intensity
+    }
+
+    pub fn update_tensions(&mut self) {
+        set_tensions_in_circuit(&mut self.circuit, self.power_supply.get_voltage());
+    }
+
+    pub fn update(&mut self) {
+        self.update_tensions();
+        self.update_intensity();
+    }
+
+    pub fn get_intensity(&self) -> f64 {
+        self.intensity
+    }
+
     pub fn get_series(&self) -> &Series {
         &self.circuit
     }
 
     pub fn get_mut_series(&mut self) -> &mut Series {
         &mut self.circuit
-    }
-
-    pub fn update_tensions(&mut self) {
-        set_tensions_in_circuit(&mut self.circuit, self.power_supply.get_voltage());
     }
 
     pub fn get_power_supply(&self) -> &PowerSupply {

@@ -60,7 +60,7 @@ pub fn get_from_json_view(circuit: &mut Circuit, term: &Term, theme: &ColorfulTh
                     }
                     Ok(circuit_from_json) => {
                         *circuit = circuit_from_json;
-                        circuit.update_tensions();
+                        circuit.update();
                         return HomeReturn::ContinueWithMessage(String::from(
                             "Circuit loaded from JSON",
                         ));

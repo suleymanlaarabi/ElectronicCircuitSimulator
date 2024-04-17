@@ -38,18 +38,28 @@ pub fn home(
         .execute(MoveTo(0, 0))
         .expect("Unable to replace console cursor");
 
-    let app_title: console::StyledObject<&str> = style("Electronic Circuit Simulator")
-        .bold()
-        .underlined()
-        .green();
+    let app_title: console::StyledObject<&str> =
+        style("Electronic Circuit Simulator").underlined().cyan();
 
     println!("\n{}", app_title);
 
     let mut title = String::from("Home");
+    match message {
+        Some(msg) => {
+            let message_styled = style(msg).bold().blue();
+            print!("\n{}\n", message_styled);
+        }
+        None => {}
+    }
 
-    if message.is_some() {
-        title.push_str(" - ");
-        title.push_str(message.as_ref().unwrap().as_str());
+    if !circuit.get_series().is_empty() {
+        title.push_str(" - CircuitInfo: (Intensity: ");
+        title.push_str(
+            ((&circuit.get_intensity() * 1000.0).round() / 1000.0)
+                .to_string()
+                .as_str(),
+        );
+        title.push_str(" A)");
     }
 
     let title_styled: console::StyledObject<&str> =
