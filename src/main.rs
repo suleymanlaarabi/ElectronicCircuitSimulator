@@ -1,23 +1,16 @@
-mod circuit;
-use std::fs;
-
-use circuit::{Circuit, PowerSupply, Resistor, Series, SeriesElement};
+use circuit::{Circuit, PowerSupply, Series};
 
 use dialoguer::{console::Term, theme::ColorfulTheme};
 
+mod circuit;
 mod views;
-
-fn render_circuit(circuit: &mut Circuit) {
-    circuit.update_tensions();
-    println!("{}", circuit);
-}
 
 fn main() {
     let term = Term::stdout();
 
     let theme = &ColorfulTheme::default();
 
-    let power_supply = PowerSupply::new(220.0);
+    let power_supply = PowerSupply::new(12.0);
 
     let series: Series = vec![];
 

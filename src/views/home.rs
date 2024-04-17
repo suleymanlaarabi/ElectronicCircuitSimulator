@@ -1,6 +1,9 @@
 use crate::{
     circuit::Circuit,
-    views::{circuit_view, get_from_json::get_from_json_view, pages_enum::Pages},
+    views::{
+        circuit_view, get_from_json::get_from_json_view, pages_enum::Pages,
+        save_as_json::save_as_json_view,
+    },
 };
 
 use crossterm::{
@@ -40,6 +43,7 @@ pub fn home(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) -> bool {
         Pages::PrintCircuit,
         Pages::GetFromJson,
         Pages::EditComponent,
+        Pages::SaveAsJson,
         Pages::Exit,
     ];
 
@@ -58,7 +62,7 @@ pub fn home(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) -> bool {
         }
         Some(1) => {
             println!("Get From JSON");
-            get_from_json_view(circuit, term);
+            get_from_json_view(circuit, term, theme);
             return false;
         }
         Some(2) => {
@@ -66,6 +70,11 @@ pub fn home(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) -> bool {
             return false;
         }
         Some(3) => {
+            println!("Save As JSON");
+            save_as_json_view(circuit, term, theme);
+            return false;
+        }
+        Some(4) => {
             println!("Exit");
             return true;
         }

@@ -5,7 +5,7 @@ use crossterm::{
     ExecutableCommand,
 };
 
-use dialoguer::Input;
+use dialoguer::{theme::ColorfulTheme, Input};
 use std::io::stdout;
 
 use crate::circuit::Circuit;
@@ -14,7 +14,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 
-pub fn get_from_json_view(circuit: &mut Circuit, term: &Term) {
+pub fn get_from_json_view(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) {
     let mut stdout = stdout();
 
     stdout
@@ -31,7 +31,7 @@ pub fn get_from_json_view(circuit: &mut Circuit, term: &Term) {
 
     println!("\n{}\n", title_styled);
 
-    let json_file_path = Input::<String>::new()
+    let json_file_path = Input::<String>::with_theme(theme)
         .with_prompt("Enter the path to the JSON file")
         .interact_on(&term)
         .unwrap();
