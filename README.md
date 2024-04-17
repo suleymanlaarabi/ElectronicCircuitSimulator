@@ -89,3 +89,7 @@ Voici un exemple de fichier de circuit en JSON :
   ]
 }
 ```
+
+## Image Du Circuit Électrique
+
+![Circuit Électrique](shema.png)
