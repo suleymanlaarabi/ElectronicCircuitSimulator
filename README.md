@@ -42,7 +42,7 @@ Voici un exemple de fichier de circuit en JSON :
 ```json
 {
   "power_supply": { "voltage": 12.0 },
-  "intensity": 12,
+  "intensity": 0.0,
   "circuit": [
     {
       "Component": {
