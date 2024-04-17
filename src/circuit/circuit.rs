@@ -34,6 +34,12 @@ impl ElectronicComponent {
     pub fn new_resistor(resistance: f64) -> Self {
         ElectronicComponent::Resistor(Resistor::new(resistance))
     }
+
+    pub fn set_resistance(&mut self, resistance: f64) {
+        match self {
+            ElectronicComponent::Resistor(resistor) => resistor.resistance = resistance,
+        }
+    }
 }
 
 impl ElectronicComponentTrait for ElectronicComponent {
@@ -169,6 +175,10 @@ impl Circuit {
 
     pub fn get_series(&self) -> &Series {
         &self.circuit
+    }
+
+    pub fn get_mut_series(&mut self) -> &mut Series {
+        &mut self.circuit
     }
 
     pub fn update_tensions(&mut self) {

@@ -16,7 +16,18 @@ use std::io::stdout;
 use console::{style, Term};
 use dialoguer::{theme::ColorfulTheme, Select};
 
-pub fn home(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) -> bool {
+pub enum HomeReturn {
+    Exit,
+    Continue,
+    ContinueWithMessage(String),
+}
+
+pub fn home(
+    circuit: &mut Circuit,
+    term: &Term,
+    theme: &ColorfulTheme,
+    message: Option<String>,
+) -> HomeReturn {
     let mut stdout = stdout();
 
     stdout
@@ -31,9 +42,16 @@ pub fn home(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) -> bool {
         .bold()
         .underlined()
         .green();
+
     println!("\n{}", app_title);
 
-    let title = String::from("Home");
+    let mut title = String::from("Home");
+
+    if message.is_some() {
+        title.push_str(" - ");
+        title.push_str(message.as_ref().unwrap().as_str());
+    }
+
     let title_styled: console::StyledObject<&str> =
         style(title.as_str()).bold().underlined().green();
 
@@ -57,30 +75,28 @@ pub fn home(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) -> bool {
     match selection {
         Some(0) => {
             println!("Print Circuit");
-            circuit_view::print_circuit_view(circuit, term);
-            return false;
+
+            return circuit_view::print_circuit_view(circuit, term);
         }
         Some(1) => {
-            println!("Get From JSON");
-            get_from_json_view(circuit, term, theme);
-            return false;
+            return get_from_json_view(circuit, term, theme);
         }
         Some(2) => {
             println!("Edit Component");
-            edit_component_view(circuit, theme);
-            return false;
+
+            return edit_component_view(circuit, theme);
         }
         Some(3) => {
             println!("Save As JSON");
             save_as_json_view(circuit, term, theme);
-            return false;
+            return circuit_view::print_circuit_view(circuit, term);
         }
         Some(4) => {
             println!("Exit");
-            return true;
+            return HomeReturn::Exit;
         }
         _ => {
-            return true;
+            return HomeReturn::Exit;
         }
     }
 }

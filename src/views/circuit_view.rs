@@ -1,4 +1,4 @@
-use crate::circuit::Circuit;
+use crate::{circuit::Circuit, views::home::HomeReturn};
 use console::{style, Term};
 
 use crossterm::{
@@ -9,7 +9,7 @@ use crossterm::{
 
 use std::io::stdout;
 
-pub fn print_circuit_view(circuit: &mut Circuit, term: &Term) -> bool {
+pub fn print_circuit_view(circuit: &mut Circuit, term: &Term) -> HomeReturn {
     let mut stdout = stdout();
 
     stdout
@@ -37,5 +37,5 @@ pub fn print_circuit_view(circuit: &mut Circuit, term: &Term) -> bool {
 
     let _ = term.read_key();
 
-    false
+    HomeReturn::Continue
 }

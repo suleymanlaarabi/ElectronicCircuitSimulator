@@ -1,4 +1,4 @@
-use crate::circuit::{Circuit, Series, SeriesElement};
+use crate::circuit::{Circuit, ElectronicComponent, Series, SeriesElement};
 
 use console::style;
 
@@ -9,7 +9,9 @@ use crossterm::{
 };
 use dialoguer::theme::ColorfulTheme;
 
-use std::{io::stdout, thread};
+use std::io::stdout;
+
+use super::HomeReturn;
 
 fn clear_terminal() {
     let mut stdout = stdout();
@@ -23,7 +25,18 @@ fn clear_terminal() {
         .expect("Unable to replace console cursor");
 }
 
-fn render_series(series: &Series, theme: &ColorfulTheme) {
+fn edit_component(component: &mut ElectronicComponent) -> HomeReturn {
+    let resistance = dialoguer::Input::<f64>::new()
+        .with_prompt("Enter the resistance")
+        .interact()
+        .unwrap();
+
+    component.set_resistance(resistance);
+
+    HomeReturn::ContinueWithMessage(String::from("Component edited successfully"))
+}
+
+fn render_series(series: &mut Series, theme: &ColorfulTheme) -> HomeReturn {
     clear_terminal();
     let select = dialoguer::Select::with_theme(theme)
         .with_prompt("Select a component to edit")
@@ -32,19 +45,15 @@ fn render_series(series: &Series, theme: &ColorfulTheme) {
         .interact()
         .unwrap();
 
-    let selected_series = &series[select];
+    let selected_series = &mut series[select];
 
     match selected_series {
-        SeriesElement::Component(component) => {
-            println!("Editing component: {}", component);
-        }
-        SeriesElement::Parallel(series) => {
-            render_select_parallel(series, theme);
-        }
+        SeriesElement::Component(component) => edit_component(component),
+        SeriesElement::Parallel(series) => render_select_parallel(series.as_mut(), theme),
     }
 }
 
-fn render_select_parallel(series: &Vec<Series>, theme: &ColorfulTheme) {
+fn render_select_parallel(series: &mut Vec<Series>, theme: &ColorfulTheme) -> HomeReturn {
     clear_terminal();
 
     let select = dialoguer::Select::with_theme(theme)
@@ -52,22 +61,22 @@ fn render_select_parallel(series: &Vec<Series>, theme: &ColorfulTheme) {
         .items(
             &series
                 .iter()
-                .map(|s| s.first().unwrap())
-                .collect::<Vec<&SeriesElement>>(),
+                .enumerate()
+                .map(|(i, s)| format!("Branche {}: ({}...)", i, s.first().unwrap()))
+                .collect::<Vec<String>>(),
         )
         .default(0)
         .interact()
         .unwrap();
-    let selected_series = &series[select];
+    let selected_series = &mut series[select];
 
-    render_series(selected_series, theme);
+    render_series(selected_series, theme)
 }
 
-pub fn edit_component_view(circuit: &mut Circuit, theme: &ColorfulTheme) -> bool {
+pub fn edit_component_view(circuit: &mut Circuit, theme: &ColorfulTheme) -> HomeReturn {
     if circuit.get_series().is_empty() {
         println!("No components in the circuit");
-        thread::sleep(std::time::Duration::from_secs(2));
-        return false;
+        return HomeReturn::ContinueWithMessage(String::from("No components in the circuit"));
     }
 
     let mut stdout = stdout();
@@ -92,9 +101,7 @@ pub fn edit_component_view(circuit: &mut Circuit, theme: &ColorfulTheme) -> bool
 
     println!("\n{}\n", title_styled);
 
-    let series: &Series = circuit.get_series();
+    let series = circuit.get_mut_series();
 
-    render_series(series, theme);
-
-    false
+    render_series(series, theme)
 }

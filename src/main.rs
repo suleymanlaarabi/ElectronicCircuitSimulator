@@ -16,11 +16,27 @@ fn main() {
 
     let mut circuit = Circuit::new(power_supply, series);
 
-    loop {
-        let exit = views::home(&mut circuit, &term, theme);
+    let mut current_message: Option<String> = Some(String::from(""));
 
-        if exit {
-            break;
+    loop {
+        match current_message.to_owned() {
+            Some(data) => {
+                if data.is_empty() {
+                    current_message = None;
+                }
+            }
+            None => {}
+        }
+
+        let response = views::home(&mut circuit, &term, theme, current_message.clone());
+
+        match response {
+            views::HomeReturn::Exit => break,
+            views::HomeReturn::Continue => continue,
+            views::HomeReturn::ContinueWithMessage(message) => {
+                current_message = Some(message);
+                continue;
+            }
         }
     }
 }

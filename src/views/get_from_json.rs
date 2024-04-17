@@ -8,13 +8,12 @@ use crossterm::{
 use dialoguer::{theme::ColorfulTheme, Input};
 use std::io::stdout;
 
-use crate::circuit::Circuit;
-use crate::views::circuit_view;
+use crate::{circuit::Circuit, views::HomeReturn};
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 
-pub fn get_from_json_view(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) {
+pub fn get_from_json_view(circuit: &mut Circuit, term: &Term, theme: &ColorfulTheme) -> HomeReturn {
     let mut stdout = stdout();
 
     stdout
@@ -37,36 +36,34 @@ pub fn get_from_json_view(circuit: &mut Circuit, term: &Term, theme: &ColorfulTh
         .expect("Couldn't get the JSON file path");
 
     let path = Path::new(&json_file_path);
-    let display = path.display();
 
     let file = File::open(&path);
 
     let mut json_string = String::new();
 
     if file.is_err() {
-        println!("Couldn't open {} reason: {:?}", display, file.err());
-        std::thread::sleep(std::time::Duration::from_secs(4));
-        return;
+        return HomeReturn::ContinueWithMessage(String::from("Couldn't open the file"));
     } else {
         let mut file = file.unwrap();
 
         match file.read_to_string(&mut json_string) {
-            Err(why) => {
-                println!("Couldn't read {} reason: {:?}", display, why);
-                std::thread::sleep(std::time::Duration::from_secs(4));
-                return;
+            Err(_) => {
+                return HomeReturn::ContinueWithMessage(String::from("Couldn't read the file"));
             }
             Ok(_) => {
                 let circuit_from_json: Result<Circuit, _> = serde_json::from_str(&json_string);
                 match circuit_from_json {
-                    Err(why) => {
-                        println!("Couldn't parse {} reason: {:?}", display, why);
-                        std::thread::sleep(std::time::Duration::from_secs(4));
-                        return;
+                    Err(_) => {
+                        return HomeReturn::ContinueWithMessage(String::from(
+                            "Couldn't parse the JSON",
+                        ));
                     }
                     Ok(circuit_from_json) => {
                         *circuit = circuit_from_json;
-                        circuit_view::print_circuit_view(circuit, term);
+                        circuit.update_tensions();
+                        return HomeReturn::ContinueWithMessage(String::from(
+                            "Circuit loaded from JSON",
+                        ));
                     }
                 }
             }

@@ -5,3 +5,4 @@ mod home;
 mod pages_enum;
 mod save_as_json;
 pub use home::home;
+pub use home::HomeReturn;
